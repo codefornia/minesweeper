@@ -68,7 +68,7 @@ class Board {
   }
 
   getAllNeighbours(rowIndex, colIndex) {
-    let neighbours = new Array();
+    let neighbours = [];
     //top cell
     if (this.doesCellExist(rowIndex - 1, colIndex)) {
       neighbours.push(this.matrix[rowIndex - 1][colIndex]);

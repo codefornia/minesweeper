@@ -2,6 +2,7 @@ class Board {
   constructor(config) {
     this.config = config;
   }
+
   generate() {
     this.initEmpty();
     this.fillWithCells();
@@ -9,58 +10,97 @@ class Board {
     this.calculateNumbers();
     console.log(this.matrix);
   }
+
   initEmpty() {
     this.matrix = new Array(this.config.height);
     for (let i = 0; i < this.matrix.length; i++) {
       this.matrix[i] = new Array(this.config.width);
     }
   }
+
   fillWithCells() {
     for (let i = 0; i < this.matrix.length; i++) {
       let row = this.matrix[i];
       for (let j = 0; j < row.length; j++) {
-        row[j] = new Cell('closed',0)
+        row[j] = new Cell('closed', 0)
       }
     }
   }
+
   generateBombs() {
-    let bCount = this.config.bombsCount
+    let bCount = this.config.bombsCount;
     while (bCount > 0) {
-      let rRow = this.generateRandomInteger(this.config.height-1);
-      let rCol = this.generateRandomInteger(this.config.width-1);
+      let rRow = this.generateRandomInteger(this.config.height - 1);
+      let rCol = this.generateRandomInteger(this.config.width - 1);
       let rCell = this.matrix[rRow][rCol];
-      if (!rCell.isBomb()){
+      if (!rCell.isBomb()) {
         rCell.setValue('B');
         bCount--;
       }
     }
   }
-  
+
   calculateNumbers() {
     for (let i = 0; i < this.matrix.length; i++) {
       let row = this.matrix[i];
       for (let j = 0; j < row.length; j++) {
-        //TODO:: Dorogaya dodelay)
-        let foundBombs = 0;
+        let bombsCount = 0;
         let cCell = row[j];
-        if(cCell.isBomb()) {
+        if (cCell.isBomb()) {
           continue;
         }
-        //top cell
-        if(row[i-1] && this.matrix[i-1][j]) {
-          let topCell = this.matrix[i - 1][j];
-          if (topCell.isBomb()) {
-            ++foundBombs;
+        this.getAllNeighbours(i,j).forEach(el => {
+          if (el.isBomb()) {
+            bombsCount++;
           }
-        }
-        //top left cell
-          
-          cCell.setValue(foundBombs+"");
+        })
+        cCell.setValue(bombsCount + "");
       }
     }
   }
-  
+
+  doesCellExist(rowIndex, colIndex) {
+    return rowIndex >= 0 && rowIndex < this.config.height && colIndex >= 0 && colIndex < this.config.width;
+  }
+
   generateRandomInteger(max) {
     return Math.floor(Math.random() * max) + 1;
+  }
+
+  getAllNeighbours(rowIndex, colIndex) {
+    let neighbours = new Array();
+    //top cell
+    if (this.doesCellExist(rowIndex - 1, colIndex)) {
+      neighbours.push(this.matrix[rowIndex - 1][colIndex]);
+    }
+    //top right cell
+    if (this.doesCellExist(rowIndex - 1, colIndex + 1)) {
+      neighbours.push(this.matrix[rowIndex - 1][colIndex + 1]);
+    }
+    //right cell
+    if (this.doesCellExist(rowIndex, colIndex + 1)) {
+      neighbours.push(this.matrix[rowIndex][colIndex + 1]);
+    }
+    //right bottom cell
+    if (this.doesCellExist(rowIndex + 1, colIndex + 1)) {
+      neighbours.push(this.matrix[rowIndex + 1][colIndex + 1]);
+    }
+    //bottom cell
+    if (this.doesCellExist(rowIndex + 1, colIndex)) {
+      neighbours.push(this.matrix[rowIndex + 1][colIndex]);
+    }
+    //left bottom cell
+    if (this.doesCellExist(rowIndex + 1, colIndex - 1)) {
+      neighbours.push(this.matrix[rowIndex + 1][colIndex - 1]);
+    }
+    //left cell
+    if (this.doesCellExist(rowIndex, colIndex - 1)) {
+      neighbours.push(this.matrix[rowIndex][colIndex - 1]);
+    }
+    //left top cell
+    if (this.doesCellExist(rowIndex - 1, colIndex - 1)) {
+      neighbours.push(this.matrix[rowIndex - 1][colIndex - 1]);
+    }
+    return neighbours;
   }
 }

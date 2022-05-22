@@ -2,13 +2,16 @@ class Board {
   constructor(config) {
     this.config = config;
   }
+  
+  getMatrix() {
+    return this.matrix;
+  }
 
   generate() {
     this.initEmpty();
     this.fillWithCells();
     this.generateBombs();
     this.calculateNumbers();
-    console.log(this.matrix);
   }
 
   initEmpty() {

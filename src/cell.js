@@ -24,4 +24,10 @@ class Cell {
   isValueValid(v) {
     return possibleValues.filter(e => e === v).length > 0;
   }
+  
+  addView(view) {
+   view.onclick = ()  => {
+     console.log(this.value );
+    }
+  }
 }

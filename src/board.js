@@ -25,7 +25,14 @@ class Board {
     for (let i = 0; i < this.matrix.length; i++) {
       let row = this.matrix[i];
       for (let j = 0; j < row.length; j++) {
-        row[j] = new Cell('closed', 0)
+        row[j] = new Cell('closed', 0);
+      }
+    }
+    for (let i = 0; i < this.matrix.length; i++) {
+      let row = this.matrix[i];
+      for (let j = 0; j < row.length; j++) {
+        let n = this.getAllNeighbours(i,j);
+        row[j].setNeighbours(n);
       }
     }
   }

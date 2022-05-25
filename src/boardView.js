@@ -13,15 +13,14 @@ class BoardView {
     for (let i = 0; i < matrix.length; i++) {
         for (let j = 0; j < matrix[i].length ; j++) {
           let cell = matrix[i][j];
-          let text = document.createTextNode(cell.value + " ");
+          let text = document.createTextNode(`${cell.value}( ${cell.state})`);
           
-          let cellCont = document.createElement("div");
-          cellCont.appendChild(text);
-          cellCont.className = 'cell'
-          this.container.appendChild(cellCont);
-          console.log(cell);
-          cell.addView(cellCont);
-          //cell.addView(cellCont);        
+          let cellView = document.createElement("div");
+          cellView.appendChild(text);
+          cellView.className = 'cell'
+          
+          this.container.appendChild(cellView);
+          cell.addView(cellView);
         }
     }
   }

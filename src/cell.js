@@ -26,7 +26,7 @@ class Cell {
   isBomb() {
     return this.value === 'B';
   }
-  
+
   isValueValid(v) {
     return possibleValues.filter(e => e === v).length > 0;
   }
@@ -42,8 +42,9 @@ class Cell {
 
   openAllNeighbours() {
     this.neighbours.forEach(n => {
-      n.state = 'open';
-      n.view.className = 'cell-open';
+      if (n.state === 'closed') {
+        n.openCell();
+      }
     });
   }
 
@@ -51,19 +52,15 @@ class Cell {
     this.view = view;
 
     view.addEventListener('mousedown', (e) => {
-      if (e.button === 0) {
-        if (this.state === 'closed') {
-          if (this.isBomb()) {
-            this.state = 'open';
-            this.view.className = 'cell-bomb';
-          } else {
-            this.state = 'open';
-            this.view.className = 'cell-open';
-            if (!this.hasBombInNeighbours()) {
-              this.openAllNeighbours();
+        if (e.button === 0) {
+          if (this.state === 'closed') {
+            if (this.isBomb()) {
+              this.state = 'open';
+              this.view.className = 'cell-bomb';
+            } else {
+              this.openCell();
             }
           }
-
         } else if (e.button === 2) {
           if (this.state === 'closed') {
             this.state = 'marked';
@@ -74,6 +71,14 @@ class Cell {
           }
         }
       }
-    })
+    )
+  }
+
+  openCell() {
+    this.state = 'open';
+    this.view.className = 'cell-open';
+    if (!this.hasBombInNeighbours()) {
+      this.openAllNeighbours();
+    }
   }
 }
